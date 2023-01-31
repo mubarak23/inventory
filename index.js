@@ -32,7 +32,7 @@ app.use(
 app.use('/uploads', express.static(join(__dirname, 'uploads')));
 
 app.use('/api/users', userRouter);
-app.use('/api/product', productRouter);
+app.use('/api/products', productRouter);
 
 app.get('/', (req, res) => {
   res.send('We Are All Good From Here');
