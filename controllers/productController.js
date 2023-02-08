@@ -8,17 +8,17 @@ import { fileSizeFormatter } from '../utils/uploadfile';
 const addProduct = asyncHandler(async (req, res) => {
   const { name, sku, price, description, category, quantity } = req.body;
 
-  if (!name || !sku || !price || !description || !category || !quantity) {
-    res.status(400);
-    throw new Error('All Product Field are Required');
-  }
+  // if (!name || !sku || !price || !description || !category || !quantity) {
+  //   res.status(400);
+  //   throw new Error('All Product Field are Required');
+  // }
 
   let fileData = {};
 
-  if (req.file) {
+  if (req.body.file) {
     let uploadedFile;
     try {
-      uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+      uploadedFile = await cloudinary.uploader.upload(req.body.file.path, {
         folder: 'inventory',
         resource_type: 'image',
       });
@@ -35,21 +35,26 @@ const addProduct = asyncHandler(async (req, res) => {
       fileSize: fileSizeFormatter(req.file.size, 2),
     };
   }
+  console.log(req.user._id);
   // add the product
   const product = await Product.create({
-    userId: req.user.id,
+    userId: req.user._id,
     name,
     sku,
     description,
     price,
     quantity,
+    category,
     image: fileData,
   });
   res.status(201).json(product);
 });
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({ user: req.user.id }).sort('-createdAt');
+  const products = await Product.find({ user: req.user._id }).sort(
+    '-createdAt'
+  );
+  console.log(products);
   res.status(200).json(products);
 });
 

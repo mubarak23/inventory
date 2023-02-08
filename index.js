@@ -1,11 +1,12 @@
 import express from 'express';
 import { connect } from 'mongoose';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import { join } from 'path';
+import cloudinary from 'cloudinary';
 import errorHandleMiddleware from './middlewares/errorsHandleMiddleware';
 import userRouter from './routes/userRoute';
 import productRouter from './routes/productRoute';
+import cookieParser from 'cookie-parser';
 import pkg from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -29,7 +30,15 @@ app.use(
   })
 );
 
-app.use('/uploads', express.static(join(__dirname, 'uploads')));
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+
+// app.use('/uploads', express.static(join(__dirname, 'uploads')));
+
+app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);

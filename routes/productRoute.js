@@ -13,7 +13,7 @@ const router = Router();
 router.post('/', protect, upload.single('image'), addProduct);
 router.patch('/:id', protect, updateProduct);
 router.get('/:id', protect, getProduct);
-router.get('/', getProducts);
+router.get('/', protect, getProducts);
 router.delete('/:id', protect, deleteProduct);
 
 export default router;
